@@ -3,8 +3,8 @@
   "main": "./dist/nb-html2-word.global.js",
   "module": "dist/nb-html2-word.esm-bundler.js",
   "unpkg": "dist/nb-html2-word.global.js",
-  "version": "0.0.1",
-  "description": "print pdf 算法逻辑,基于原生js,web h5 vue react 都可以调用",
+  "version": "0.0.7",
+  "description": "nb-html2-word 基于render tree进行信息采集,web h5 vue react 都可以调用",
   "directories": {
     "lib": "lib"
   },

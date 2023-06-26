@@ -1,3 +1,8 @@
+/*!
+    LibraryName: nb-html2-word
+    author: droden
+    Date: 2023-0626-17:07
+  */
 var htmlToWord = (function (exports) {
     'use strict';
 
@@ -88,13 +93,13 @@ var htmlToWord = (function (exports) {
                 paragraph: {
                     border: {
                         top: {
-                            color: '#FFFF00',
+                            color: '#FFFFFF',
                             space: 20,
                             style: build.exports.BorderStyle.SINGLE,
                             size: 1,
                         },
                         bottom: {
-                            color: '#FFFF00',
+                            color: '#FFFFFF',
                             space: 20,
                             style: build.exports.BorderStyle.SINGLE,
                             size: 1,
@@ -8143,14 +8148,14 @@ var htmlToWord = (function (exports) {
         static create(infos) {
             return __awaiter$1(this, void 0, void 0, function* () {
                 const { dom } = infos;
-                const imgs = Array.from(dom.parentNode.querySelectorAll('img'));
-                console.log('xxxdom imgs, dom', imgs, dom);
-                for (let img of imgs) {
-                    img.setAttribute('crossorigin', 'anonymous');
-                    let imgUrl = img.getAttribute('src');
-                    imgUrl = imgUrl + '?' + new Date().getTime();
-                    img.setAttribute('src', imgUrl);
-                }
+                // const imgs: HTMLElement[] = Array.from(dom.parentNode.querySelectorAll('img'))
+                // console.log('xxxdom imgs, dom', imgs, dom)
+                // for (let img of imgs) {
+                //   img.setAttribute('crossorigin', 'anonymous')
+                //   let imgUrl = img.getAttribute('src')
+                //   imgUrl = imgUrl + '?' + new Date().getTime()
+                //   img.setAttribute('src', imgUrl)
+                // }
                 const base64Data = yield this.canvasTobase64(dom, {
                     logging: false,
                     timeout: 3500,

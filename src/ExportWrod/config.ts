@@ -52,13 +52,13 @@ export const defaultStyle = {
       paragraph: {
         border: {
           top: {
-            color: '#FFFF00',
+            color: '#FFFFFF',
             space: 20,
             style: BorderStyle.SINGLE,
             size: 1,
           },
           bottom: {
-            color: '#FFFF00',
+            color: '#FFFFFF',
             space: 20,
             style: BorderStyle.SINGLE,
             size: 1,

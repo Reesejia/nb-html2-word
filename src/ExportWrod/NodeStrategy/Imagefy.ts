@@ -17,14 +17,14 @@ import Constant from '../../Constant'
 class Imagefy {
   static async create(infos) {
     const { dom } = infos
-    const imgs: HTMLElement[] = Array.from(dom.parentNode.querySelectorAll('img'))
-    console.log('xxxdom imgs, dom', imgs, dom)
-    for (let img of imgs) {
-      img.setAttribute('crossorigin', 'anonymous')
-      let imgUrl = img.getAttribute('src')
-      imgUrl = imgUrl + '?' + new Date().getTime()
-      img.setAttribute('src', imgUrl)
-    }
+    // const imgs: HTMLElement[] = Array.from(dom.parentNode.querySelectorAll('img'))
+    // console.log('xxxdom imgs, dom', imgs, dom)
+    // for (let img of imgs) {
+    //   img.setAttribute('crossorigin', 'anonymous')
+    //   let imgUrl = img.getAttribute('src')
+    //   imgUrl = imgUrl + '?' + new Date().getTime()
+    //   img.setAttribute('src', imgUrl)
+    // }
     const base64Data = await this.canvasTobase64(dom, {
       logging: false,
       timeout: 3500,
