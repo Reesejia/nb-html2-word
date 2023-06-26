@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body id="body">
+    <form id="form1" name="form1" method="get" action="">
+        <input type="button" id="test" value="输出HTML DOM元素节点" onclick="output_node()" />
+    </form>
+    <main>
+        <div>
+            <p>
+                <span>
+                    <a>
+                        <em>dfdff</em>
+                    </a>
+                    <au>sss</au>
+                    testdddd
+                    testdddd2222
+                </span>
+            </p>
+            <img src="">
+            <h2>hhh</h2>
+            <span>kkk</span>
+        </div>
+        <ul>
+            <li>
+                <h5>fff</h5>
+            </li>
+            <li>
+                <div>ggg</div>
+            </li>
+        </ul>
+    </main>
+
+</body>
+
+</html>
+<script>
+    function postOrderTraversal(node, callback) {
+        const stack = [];    // 定义一个栈用于保存待处理节点
+        let prevNode = null;   // 定义一个变量用于保存上一次处理的节点
+
+        while (node || stack.length) {
+            if (node) {
+                stack.push(node);     // 将当前节点压入栈中
+                node = node.firstChild;   // 指向当前节点的第一个子节点
+            } else {
+                const top = stack[stack.length - 1];    // 获取栈顶节点
+                if (top.lastChild && top.lastChild !== prevNode) {   // 如果存在最后一个子节点并且它未被处理，则将其压入栈中
+                    node = top.lastChild;
+                } else {    // 如果当前节点没有子节点或者子节点已经被处理，则执行回调函数，并将其弹出栈
+                    stack.pop();
+                    if (top.nodeType === Node.TEXT_NODE || top.nodeType === Node.ELEMENT_NODE) {    // 如果当前节点是文本节点，则执行回调函数对其进行处理
+                        callback(top);
+                    }
+                    prevNode = top;   // 保存上一次处理的节点，以便在下次迭代时使用
+                }
+            }
+        }
+    }
+
+    // 示例用法
+    const root = document.getElementById('body');       // 获取HTML页面的根节点
+    postOrderTraversal(root, function (node) {     // 对DOM树进行后序遍历，并对每个文本节点执行回调函数
+        console.log(node);
+    });
+
+</script>

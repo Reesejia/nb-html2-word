@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="block">
+        <!--  -->
+    </div>
+    <div id="block2">
+        <div>aa</div>
+
+        <p>ppp</p>
+        <span></span>
+        bbbddd
+    </div>
+</body>
+
+</html>
+<script>
+    const node = document.getElementById('block2')
+    if (node.hasChildNodes()) {
+        Array.from(node.childNodes).forEach((Inode) => {
+            console.log(Inode.tagName, Inode.nodeType, Inode.nodeValue)
+        });
+    }
+    // https://blog.csdn.net/qiphon3650/article/details/86625919
+</script>

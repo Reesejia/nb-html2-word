@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>HTML DOM的节点遍历</title>
+
+
+</head>
+
+<body>
+    <div class="entry">
+        <form id="form1" name="form1" method="get" action="">
+            <input type="button" id="test" value="输出HTML DOM元素节点" onclick="output_node()" />
+        </form>
+        <main>
+            <div class="magic-ui-page">
+                <div class="word-node-module-flag">
+                    <p>纯债加点料</p>
+                    <p>债基<span>投资新思路</span></p>
+                </div>
+                <div class="word-node-module-flag">
+                    <div>震荡市里的小确幸</div>
+                    <div></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+
+</body>
+
+</html>
+<script type="text/javascript">
+    var info = "";
+    var num = 0;
+    function output_node() {
+        //document 获取根元素  
+        var root = document.getElementsByClassName('entry')[0];
+        //遍历所有的节点  
+        traverseNodes(root);
+
+        info = "共有" + num + "个元素节点\n" + "按深度优先遍历方法搜索节点如下：\n" + info;
+
+        console.log('info', info)
+        info = "";
+        num = 0;
+    }
+
+    function display(node) {
+        if (node.nodeType === 3) {
+            info += "第" + (++num) + "个文本节点是:" + node.nodeValue + "\n";
+        } else {
+            info += "第" + (++num) + "个元素是:" + node.nodeName + ":" + node.nodeValue + "\n";
+        };
+
+    }
+
+    function traverseNodes(node) {
+        //判断是否是元素节点  
+        if (node.nodeType == 1 || node.nodeType == 3) {
+            display(node);
+
+            //判断该元素节点是否有子节点  
+            if (node.hasChildNodes) {
+                //得到所有的子节点  
+                var sonnodes = node.childNodes;
+                //遍历所有的子节点
+
+                for (var i = 0; i < sonnodes.length; i++) {
+                    //得到具体的某个子节点  
+                    console.log('sonnodes', sonnodes.item(i))
+                    var sonnode = sonnodes.item(i);
+                    //递归遍历  
+                    traverseNodes(sonnode);
+                }
+            }
+        }
+    }
+
+
+
+</script>

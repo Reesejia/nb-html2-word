@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body id="body">
+    <form id="form1" name="form1" method="get" action="">
+        <input type="button" id="test" value="输出HTML DOM元素节点" onclick="output_node()" />
+    </form>
+    <main>
+        <div>
+            <p>
+                <span>
+                    <a>
+                        <em>dfdff</em>
+                    </a>
+                    <au>sss</au>
+                    testdddd
+                    testdddd2222
+                </span>
+            </p>
+            <img src="">
+            <h2>hhh</h2>
+            <span>kkk</span>
+        </div>
+        <ul>
+            <li>
+                <h5>fff</h5>
+            </li>
+            <li>
+                <div>ggg</div>
+            </li>
+        </ul>
+    </main>
+
+</body>
+
+</html>
+<script>
+
+    function postOrderTraversal(node, callback) {
+        if (node.nodeType === Node.ELEMENT_NODE) {   // 如果当前节点是元素节点，则递归处理其子节点
+            const children = node.childNodes;
+            for (let i = 0; i < children.length; i++) {
+                postOrderTraversal(children[i], callback);
+            }
+        }
+
+        if (node.nodeType === Node.TEXT_NODE) {      // 如果当前节点是文本节点，则执行回调函数对其进行处理
+            callback(node);
+        }
+    }
+
+
+    // 示例用法
+    const root = document.getElementById('body');       // 获取HTML页面的根节点
+    postOrderTraversal(root, function (node) {     // 对DOM树进行后序遍历，并对每个文本节点执行回调函数
+        console.log(node.nodeValue);
+    });
+
+</script>

@@ -1,0 +1,7 @@
+export { Fontfy } from './src/Fontfy'
+export { Positionfy } from './src/Positionfy'
+export { Colorfy } from './src/Colorfy'
+export { Borderfy } from './src/Borderfy'
+export { Backgroundfy } from './src/Backgroundfy'
+export { WidthHeightfy } from './src/WidthHeightfy'
+export { Indentfy } from './src/Indentfy'

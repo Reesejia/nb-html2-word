@@ -1,0 +1,44 @@
+{
+  "name": "nb-html2-word",
+  "main": "./dist/nb-html2-word.global.js",
+  "module": "dist/nb-html2-word.esm-bundler.js",
+  "unpkg": "dist/nb-html2-word.global.js",
+  "version": "1.1.19",
+  "description": "print pdf 算法逻辑,基于原生js,web h5 vue react 都可以调用",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "homepage": "https://github.com/wangjainxi/nb-html2-word",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:wangjainxi/nb-html2-word.git"
+  },
+  "keywords": [
+    "html to word",
+    "word"
+  ],
+  "author": "",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "devDependencies": {
+    "@types/node": "^18.13.0"
+  },
+  "buildOptions": {
+    "name": "htmlToWord",
+    "formats": [
+      "esm-bundler",
+      "cjs",
+      "global"
+    ]
+  },
+  "dependencies": {
+    "html-docx": "^1.2.0",
+    "html-to-docx": "^1.8.0"
+  }
+}
