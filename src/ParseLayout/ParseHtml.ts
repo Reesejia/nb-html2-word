@@ -1,14 +1,17 @@
 import Constant from '../Constant'
 import { ComponentType } from '../types'
 class ParseHtml {
-  static format(ele) {
+  constructor(ele) {
+    this.ele = ele
+  }
+  format(ele) {
     this.walk(ele)
     this.comsMap = this.sortMap(this.comsMap)
     return this.comsMap
   }
 
   ele!: Element
-  static comsMap = new Map()
+  comsMap = new Map()
 
   // 条件1：有component 没有 container
   // 先广度遍历，是否有magic-ui-area-module，级别的container，
@@ -21,7 +24,7 @@ class ParseHtml {
   //   剩余情况将文本结构 匹配节点和样式策略。
   //   换行情况 nbsb需要处理
 
-  static walk(ele: Element) {
+  walk(ele: Element) {
     const classList = ele.classList
     if (classList.contains(Constant.WordUiAreaModule)) {
       this.setComsMap(ele)
@@ -39,8 +42,8 @@ class ParseHtml {
     }
   }
 
-  static order = 0
-  static async setComsMap(ele: Element) {
+  order = 0
+  async setComsMap(ele: Element) {
     // COM_TYPE: 'COM' 'AREA_IMG' 'IMG' 'TABLE'
     const comType = this.getComType(ele)
     const domObj = {
@@ -58,7 +61,7 @@ class ParseHtml {
     this.order++
   }
 
-  static sortMap(map) {
+  sortMap(map) {
     const sortedArray = [...map].sort(
       (a, b) => a[1].selfInfo.addTop - b[1].selfInfo.addTop
     )
@@ -75,7 +78,7 @@ class ParseHtml {
    * 将该元素的position top值，和该元素的祖先节点的position top值累加，
    * 确定改元素相对于页面top值，从而确定该元素在页面展示顺序
    */
-  static addContainerTop(ele: Element) {
+  addContainerTop(ele: Element) {
     let node = ele
     let top = 0
     let isContinue = true
@@ -95,7 +98,7 @@ class ParseHtml {
     return top
   }
 
-  static getComType(ele: Element) {
+  getComType(ele: Element) {
     // COM_TYPE: 'NORMAL_COM' 'AREA_IMG' 'IMG' 'TABLE' 'ECHART'
     const classList = ele.classList
     if (classList.contains(Constant.WordUiAreaModule)) {

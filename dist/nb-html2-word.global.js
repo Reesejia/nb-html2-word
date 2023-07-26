@@ -1,7 +1,7 @@
 /*!
     LibraryName: nb-html2-word
     author: droden
-    Date: 2023-0626-17:07
+    Date: 2023-0726-15:21
   */
 var htmlToWord = (function (exports) {
     'use strict';
@@ -138,6 +138,7 @@ var htmlToWord = (function (exports) {
     Constant.WordUiImageModule = 'magic-ui-image-module'; // 3. 本身是图片、矢量图、二维码 组件级别
     Constant.WordUiAreaModule = 'magic-ui-area-module'; // 4. 某个区域要转成图片 组级别
     Constant.WordUiTableModule = 'magic-ui-table-module'; // 5.table com标识 组件级别
+    Constant.WordUIWidthFill = "magic-ui-width-fill"; // 100% 填充
     // table header
     Constant.TableInnerWraper = 'el-table__inner-wrapper';
     Constant.TableHeaderWraper = 'el-table__header';
@@ -153,9 +154,9 @@ var htmlToWord = (function (exports) {
     Constant.MaxStackLen = 15000;
     Constant.pageWidth = 12000;
     Constant.pageHeight = 17000;
-    Constant.FontRemScale = 100;
+    Constant.FontRemScale = 200;
     Constant.MaxWidthPerWord = 800;
-    Constant.FontPxScale = 1.3;
+    Constant.FontPxScale = 2;
     Constant.singleTags = ['br', 'img'];
     Constant.singleRowTags = ['br'];
 
@@ -169,7 +170,12 @@ var htmlToWord = (function (exports) {
     })(ComponentType || (ComponentType = {}));
 
     class ParseHtml {
-        static format(ele) {
+        constructor(ele) {
+            this.comsMap = new Map();
+            this.order = 0;
+            this.ele = ele;
+        }
+        format(ele) {
             this.walk(ele);
             this.comsMap = this.sortMap(this.comsMap);
             return this.comsMap;
@@ -184,7 +190,7 @@ var htmlToWord = (function (exports) {
         //   剩余情况，需要先判断子元素是否有chart img，如果有 先将chart img 转成图片，并给此区域添加有图片标记，todo
         //   剩余情况将文本结构 匹配节点和样式策略。
         //   换行情况 nbsb需要处理
-        static walk(ele) {
+        walk(ele) {
             const classList = ele.classList;
             if (classList.contains(Constant.WordUiAreaModule)) {
                 this.setComsMap(ele);
@@ -202,7 +208,7 @@ var htmlToWord = (function (exports) {
                 }
             }
         }
-        static setComsMap(ele) {
+        setComsMap(ele) {
             return __awaiter$1(this, void 0, void 0, function* () {
                 // COM_TYPE: 'COM' 'AREA_IMG' 'IMG' 'TABLE'
                 const comType = this.getComType(ele);
@@ -221,7 +227,7 @@ var htmlToWord = (function (exports) {
                 this.order++;
             });
         }
-        static sortMap(map) {
+        sortMap(map) {
             const sortedArray = [...map].sort((a, b) => a[1].selfInfo.addTop - b[1].selfInfo.addTop);
             const sortedMap = new Map(sortedArray);
             console.log('sortedMap', sortedMap);
@@ -235,7 +241,7 @@ var htmlToWord = (function (exports) {
          * 将该元素的position top值，和该元素的祖先节点的position top值累加，
          * 确定改元素相对于页面top值，从而确定该元素在页面展示顺序
          */
-        static addContainerTop(ele) {
+        addContainerTop(ele) {
             let node = ele;
             let top = 0;
             let isContinue = true;
@@ -253,7 +259,7 @@ var htmlToWord = (function (exports) {
             }
             return top;
         }
-        static getComType(ele) {
+        getComType(ele) {
             // COM_TYPE: 'NORMAL_COM' 'AREA_IMG' 'IMG' 'TABLE' 'ECHART'
             const classList = ele.classList;
             if (classList.contains(Constant.WordUiAreaModule)) {
@@ -273,8 +279,6 @@ var htmlToWord = (function (exports) {
             }
         }
     }
-    ParseHtml.comsMap = new Map();
-    ParseHtml.order = 0;
 
     var FileSaver_min = {exports: {}};
 
@@ -322,6 +326,24 @@ var htmlToWord = (function (exports) {
             size = size * Constant.FontPxScale;
         }
         return [size, unit];
+    };
+    const banner = () => {
+        const info = `/*!
+  LibraryName: nb-html2-word
+  author: droden
+  Date: ${formatDateTime()}
+  */`;
+        console.log('xxx export file info', info);
+        return info;
+    };
+    const formatDateTime = () => {
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        const hour = date.getHours().toString().padStart(2, '0');
+        const minute = date.getMinutes().toString().padStart(2, '0');
+        return `${year}-${month}${day}-${hour}:${minute}`;
     };
 
     /*!
@@ -8211,12 +8233,22 @@ var htmlToWord = (function (exports) {
         }
         // 根据宽高比和最大宽度计算 width height
         static format(dom) {
-            const ratio = dom.clientWidth / dom.clientHeight;
-            const maxWidthPerWord = Constant.MaxWidthPerWord;
-            const maxWidth = this.convertPxToPt(maxWidthPerWord);
-            const height = this.convertPxToPt(maxWidthPerWord / ratio);
+            const { clientWidth, clientHeight } = dom;
+            let width;
+            let height;
+            const originSize = dom.classList.contains(Constant.WordUIWidthFill);
+            if (!originSize) {
+                width = clientWidth;
+                height = clientHeight;
+            }
+            else {
+                const ratio = clientWidth / clientHeight;
+                const maxWidthPerWord = Constant.MaxWidthPerWord;
+                width = this.convertPxToPt(maxWidthPerWord);
+                height = this.convertPxToPt(maxWidthPerWord / ratio);
+            }
             return {
-                width: maxWidth,
+                width,
                 height,
             };
         }
@@ -8886,7 +8918,10 @@ var htmlToWord = (function (exports) {
                     const imgRun = yield Imagefy.create(selfInfo);
                     runWraper.addChildElement(imgRun);
                 }
-                else if (comType === ComponentType.IMG) ;
+                else if (comType === ComponentType.IMG) {
+                    const imgRun = yield Imagefy.create(selfInfo);
+                    runWraper.addChildElement(imgRun);
+                }
                 else if (comType === ComponentType.ECHART) {
                     const imgRun = yield Imagefy.create(selfInfo);
                     runWraper.addChildElement(imgRun);
@@ -8940,31 +8975,39 @@ var htmlToWord = (function (exports) {
         createComsNode() {
             return __awaiter$1(this, void 0, void 0, function* () {
                 const outerEle = document.querySelector(`#${this.entryId}`);
-                const comsMap = ParseHtml.format(outerEle);
+                const htmlInstance = new ParseHtml(outerEle);
+                const comsMap = htmlInstance.format(outerEle);
                 console.log('this.comsMap', comsMap);
                 const values = comsMap.values();
+                const children = [];
                 for (const value of values) {
                     const paragraphWraper = yield Creator.createNode(value);
-                    this.sections[0].children.push(paragraphWraper);
+                    children.push(paragraphWraper);
                     console.log('xxx sectionChildren', paragraphWraper);
                 }
+                this.sections[0].children = children;
+                console.log('xxx this.sections', this.sections);
                 return this.sections;
             });
         }
     }
-    const exportWrod = ({ id, filename, config }) => __awaiter$1(void 0, void 0, void 0, function* () {
+    const exportWrod = ({ id, filename, config, success, fail, complete, }) => __awaiter$1(void 0, void 0, void 0, function* () {
         try {
             if (config && typeof config !== undefined) {
                 Constant.setConfigClass(config);
             }
+            banner();
             const wordInstance = new WrodFactory(id);
             const option = yield wordInstance.createComsNode();
             console.log('exportWrod option', option);
             yield optionToFile({ sections: option, styles: defaultStyle }, filename);
+            success && success();
         }
         catch (err) {
             console.error('生成失败：' + err.message);
+            fail && fail(err);
         }
+        complete && complete();
     });
 
     const paragraph_demo1 = () => {

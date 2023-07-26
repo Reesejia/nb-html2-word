@@ -17,6 +17,7 @@ import Constant from '../../Constant'
 class Imagefy {
   static async create(infos) {
     const { dom } = infos
+
     // const imgs: HTMLElement[] = Array.from(dom.parentNode.querySelectorAll('img'))
     // console.log('xxxdom imgs, dom', imgs, dom)
     // for (let img of imgs) {
@@ -91,13 +92,23 @@ class Imagefy {
   }
 
   // 根据宽高比和最大宽度计算 width height
-  static format(dom) {
-    const ratio = dom.clientWidth / dom.clientHeight
-    const maxWidthPerWord = Constant.MaxWidthPerWord
-    const maxWidth = this.convertPxToPt(maxWidthPerWord)
-    const height = this.convertPxToPt(maxWidthPerWord / ratio)
+  static format(dom: Element) {
+    const { clientWidth, clientHeight } = dom
+    let width
+    let height
+    const originSize = dom.classList.contains(Constant.WordUIWidthFill)
+    if (!originSize) {
+      width = clientWidth
+      height = clientHeight
+    } else {
+      const ratio = clientWidth / clientHeight
+      const maxWidthPerWord = Constant.MaxWidthPerWord
+      width = this.convertPxToPt(maxWidthPerWord)
+      height = this.convertPxToPt(maxWidthPerWord / ratio)
+    }
+
     return {
-      width: maxWidth,
+      width,
       height,
     }
   }

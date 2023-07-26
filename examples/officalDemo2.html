@@ -91,7 +91,7 @@
 </head>
 
 <body style="font-size: 14px;">
-  <button onclick="download()">下载word2</button>
+  <button id="exportWord" onclick="download()">下载word2</button>
   <button onclick="downloadDemo()">下载demo</button>
   <div id="app" data-v-app="">
     <div id="container_99a1601b" class="magic-ui-container magic-layout-absolute magic-ui-component"
@@ -152,8 +152,7 @@
             </div>
           </div>
         </div>
-        <div id="container_58d4b68b"
-          class="magic-ui-container magic-layout-absolute magic-ui-area-module magic-ui-component"
+        <div id="container_58d4b68b" class="magic-ui-container magic-layout-absolute  magic-ui-component"
           style="width: 3.51rem; height: 0.88rem; position: absolute; top: 3.39rem; left: 0px; z-index: 0; font-size: 0.14rem; font-family: AliRegular; border-color: transparent; background-repeat: no-repeat; background-size: auto; transform: none;">
           <div id="container_749ebddc" class="magic-ui-container magic-layout-absolute magic-ui-component"
             style="width: 1.16rem; height: 0.5rem; position: absolute; top: 0.27rem; right: 0.45rem; z-index: 0; background-repeat: no-repeat; background-size: 100% 100%; font-family: AliRegular; transform: none; border-color: transparent;">
@@ -274,8 +273,7 @@
           </div>
         </div>
       </div>
-      <div id="container_85ec8670"
-        class="magic-ui-container magic-layout-absolute magic-ui-component magic-ui-area-module"
+      <div id="container_85ec8670" class="magic-ui-container magic-layout-absolute magic-ui-component"
         style="width: 3.51rem; height: 1.37rem; position: absolute; top: 0px; left: 0.12rem; z-index: 1; background-repeat: no-repeat; background-size: 100% 100%; font-family: AliRegular; transform: none; border-color: transparent;">
         <img class="magic-ui-img magic-ui-image-module magic-ui-component"
           src="./officalDemo2_files/17ea0a60-1647-46e2-abf5-582f92cf3f27.png" alt="magic ui image" id="img_57e9193c"
@@ -439,11 +437,20 @@
   // getParseHtml()
   // new DfsPage({ entryClass: "magic-ui-page" })
   function download() {
+   
     console.log('clicked')
-    exportWrod({ id: 'app', filename: 'test.docx' })
+    exportWrod({ id: 'app', filename: '测试1.docx', success: () =>{
+      console.log('下载成功了111')
+      window.close()
+    },
+    complete: () =>{
+      console.log('下载成功了2222')
+    }
+  })
   }
 
   function downloadDemo() {
+    window.open("http://127.0.0.1:9000/examples/officalDemo2.html")
     exportDemo()
   }
     // exportDemo()

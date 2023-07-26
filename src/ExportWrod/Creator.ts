@@ -17,8 +17,8 @@ export default class Creator {
       const imgRun = await Imagefy.create(selfInfo)
       runWraper.addChildElement(imgRun)
     } else if (comType === ComponentType.IMG) {
-      // const imgRun = await Imagefy.create(selfInfo);
-      // runWraper.addChildElement(imgRun);
+      const imgRun = await Imagefy.create(selfInfo)
+      runWraper.addChildElement(imgRun)
     } else if (comType === ComponentType.ECHART) {
       const imgRun = await Imagefy.create(selfInfo)
       runWraper.addChildElement(imgRun)

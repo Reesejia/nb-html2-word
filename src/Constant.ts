@@ -9,6 +9,7 @@ export default class Constant {
   static WordUiImageModule = 'magic-ui-image-module' // 3. 本身是图片、矢量图、二维码 组件级别
   static WordUiAreaModule = 'magic-ui-area-module' // 4. 某个区域要转成图片 组级别
   static WordUiTableModule = 'magic-ui-table-module' // 5.table com标识 组件级别
+  static WordUIWidthFill = "magic-ui-width-fill" // 100% 填充
 
   // table header
   static TableInnerWraper = 'el-table__inner-wrapper'
@@ -26,9 +27,9 @@ export default class Constant {
   static MaxStackLen = 15000
   static pageWidth = 12000
   static pageHeight = 17000
-  static FontRemScale = 100
+  static FontRemScale = 200
   static MaxWidthPerWord = 800
-  static FontPxScale = 1.3
+  static FontPxScale = 2
   static singleTags = ['br', 'img']
   static singleRowTags = ['br']
 

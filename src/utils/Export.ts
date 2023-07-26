@@ -44,4 +44,24 @@ export const transSizeUnit = (str) => {
   return [size, unit]
 }
 
-export { exportBuffer, optionToFile }
+const banner = () => {
+  const info = `/*!
+  LibraryName: nb-html2-word
+  author: droden
+  Date: ${formatDateTime()}
+  */`
+  console.log('xxx export file info', info)
+  return info
+}
+
+const formatDateTime = () => {
+  const date = new Date()
+  const year = date.getFullYear()
+  const month = (date.getMonth() + 1).toString().padStart(2, '0')
+  const day = date.getDate().toString().padStart(2, '0')
+  const hour = date.getHours().toString().padStart(2, '0')
+  const minute = date.getMinutes().toString().padStart(2, '0')
+  return `${year}-${month}${day}-${hour}:${minute}`
+}
+
+export { exportBuffer, optionToFile, banner }
