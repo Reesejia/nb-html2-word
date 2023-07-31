@@ -1,5 +1,5 @@
 import Constant from '../Constant'
-import ParseHtml from '../ParseLayout/ParseHtml'
+import {ParseHtml} from '../ParseLayout/ParseHtml'
 import { banner, optionToFile } from '../utils/Export'
 import Creator from './Creator'
 import { defaultSections, defaultStyle } from './config'
@@ -12,16 +12,10 @@ export interface ExportConfig {
   complete?: Function
 }
 class WrodFactory {
-  constructor(id: string) {
-    this.entryId = id
-  }
-  entryId!: string
   sections = defaultSections
-
-  async createComsNode() {
-    const outerEle = document.querySelector(`#${this.entryId}`)
-    const htmlInstance = new ParseHtml(outerEle)
-    const comsMap = htmlInstance.format(outerEle)
+  async createComsNode(id: string) {
+    const htmlInstance = new ParseHtml(id)
+    const comsMap = htmlInstance.format()
     console.log('this.comsMap', comsMap)
     const values = comsMap.values()
     const children = []
@@ -49,8 +43,8 @@ export const exportWrod = async ({
       Constant.setConfigClass(config)
     }
     banner()
-    const wordInstance = new WrodFactory(id)
-    const option = await wordInstance.createComsNode()
+    const wordInstance = new WrodFactory()
+    const option = await wordInstance.createComsNode(id)
     console.log('exportWrod option', option)
     await optionToFile({ sections: option, styles: defaultStyle }, filename)
     success && success()

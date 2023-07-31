@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/vue3/runtime/page/favicon.png" type="image/png" />
+    <title>Vue3 Page</title>
+    <style>
+      html,
+      body,
+      #app {
+        width: 100%;
+        height: 100%;
+      }
+      body,
+      p {
+        margin: 0;
+        padding: 0;
+      }
+      #app {
+        position: relative;
+        overflow: auto;
+      }
+      #app::-webkit-scrollbar {
+        width: 0 !important;
+        display: none;
+      }
+      .magic-ui-container.magic-layout-relative.magic-ui-component {
+        min-height: 10px;
+      }
+      #app * {
+        box-sizing: border-box;
+      }
+    </style>
+    <script type='module' src='./uiconfig_m272TxWauC3Y.js'></script>
+	<script src="/magic-editor-web/js/vue.runtime.global.js"></script>
+    <script type="module" crossorigin src="/vue3/runtime/page/assets/index.d2badf28.js"></script>
+    <script type="module">try{import.meta.url;import("_").catch(()=>1);}catch(e){}window.__vite_is_modern_browser=true;</script>
+    <script type="module">!function(){if(window.__vite_is_modern_browser)return;console.warn("vite: loading legacy build because dynamic import or import.meta.url is unsupported, syntax error above should be ignored");var e=document.getElementById("vite-legacy-polyfill"),n=document.createElement("script");n.src=e.src,n.onload=function(){System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))},document.body.appendChild(n)}();</script>
+  </head>
+  <body>
+    <button onclick="download()" >下载word</button>
+  
+
+    <div id="app"></div>
+    
+    
+    
+    <script src="http://127.0.0.1:5050/packages/nb-html2-word/dist/nb-html2-word.global.js"></script>
+    <script src="http://127.0.0.1:5050/packages/nb-fe-pdf/dist/nb-fe-pdf.global.js"></script>
+    <script>
+      const app = document.getElementById('app');
+      let { exportWrod, ParseHtml } = htmlToWord;
+      const {Print} = pdfPrint
+
+      function download() {
+        // setTimeout(() => {
+          const htmlInstance = new ParseHtml('app')
+        const comsMap = htmlInstance.format()
+          console.log('docx clicked ParseHtml comsMap', comsMap);
+          const contentWraper = document.querySelector("#app")
+          const childs = contentWraper.children;
+          for(const child of childs){
+            contentWraper.removeChild(child)
+          }
+          // console.log('comsMap.keys()', comsMap.keys())
+          const max = 1000
+          let i = 0;
+          for(let m of comsMap.keys()){
+            if(i < max){
+              contentWraper.appendChild(m)
+            }
+            i++
+          }
+          // // exportWrod({ id: 'app', filename: 'report.docx' });
+          // console.log('Print', Print)
+          new Print({
+      // @ts-ignore
+      moduleId: '#app', // 自定义页面id
+      injectClass:{
+        spliteFlag: 'magic-ui-component'
+      },
+      pageInfo: {
+        defaultType: 'HEADER_TYPE', // 页眉页脚类型：HEADER_TYPE  有头无尾；NORMAL_TYPE 无头无尾；FOOTER_TYPE  无头有尾；HEADER_FOOTER_TYPE  有头有尾
+        needTpl: false,
+        waterMark: false, // 是否需要水印, 默认为false
+        waterMarkConfig: {
+          waterMarkContent: '前端大喜子-droden',
+          waterMarkId: 'print-operate-report', //需要做水印的元素的id
+        },
+      },
+    })
+        // });
+      }
+    </script>
+    <script nomodule>!function(){var e=document,t=e.createElement("script");if(!("noModule"in t)&&"onbeforeload"in t){var n=!1;e.addEventListener("beforeload",(function(e){if(e.target===t)n=!0;else if(!e.target.hasAttribute("nomodule")||!n)return;e.preventDefault()}),!0),t.type="module",t.src=".",e.head.appendChild(t),t.remove()}}();</script>
+    <script nomodule crossorigin id="vite-legacy-polyfill" src="/vue3/runtime/page/assets/polyfills-legacy.99c0360e.js"></script>
+    <script nomodule crossorigin id="vite-legacy-entry" data-src="/vue3/runtime/page/assets/index-legacy.9e5cf6a3.js">System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))</script>
+  </body>
+</html>

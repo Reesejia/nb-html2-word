@@ -1,7 +1,7 @@
 /*!
     LibraryName: nb-html2-word
     author: droden
-    Date: 2023-0726-15:21
+    Date: 2023-0731-16:21
   */
 var htmlToWord = (function (exports) {
     'use strict';
@@ -170,13 +170,19 @@ var htmlToWord = (function (exports) {
     })(ComponentType || (ComponentType = {}));
 
     class ParseHtml {
-        constructor(ele) {
+        constructor(id) {
             this.comsMap = new Map();
             this.order = 0;
+            const ele = document.querySelector(`#${id}`);
+            if (typeof ele == 'undefined') {
+                console.error(`id为：${id}的元素不存在!`);
+                return;
+            }
             this.ele = ele;
         }
-        format(ele) {
-            this.walk(ele);
+        format() {
+            this.findPageChild();
+            console.log('ParseHtml this.comsMap', this.comsMap);
             this.comsMap = this.sortMap(this.comsMap);
             return this.comsMap;
         }
@@ -190,25 +196,33 @@ var htmlToWord = (function (exports) {
         //   剩余情况，需要先判断子元素是否有chart img，如果有 先将chart img 转成图片，并给此区域添加有图片标记，todo
         //   剩余情况将文本结构 匹配节点和样式策略。
         //   换行情况 nbsb需要处理
-        walk(ele) {
+        findPageChild() {
+            //  node.classList.contains(Constant.WordUIPage)
+            const uiPage = this.ele.querySelector(`.${Constant.WordUIPage}`);
+            const uiContainers = Array.from(uiPage.children);
+            uiContainers.forEach((container, index) => {
+                this.walk(container, index);
+            });
+        }
+        walk(ele, containerOrder) {
             const classList = ele.classList;
             if (classList.contains(Constant.WordUiAreaModule)) {
-                this.setComsMap(ele);
+                this.setComsMap(ele, containerOrder);
             }
             else {
                 const isComponent = !classList.contains(Constant.WordUiContainer) &&
                     classList.contains(Constant.WordUiComponent);
                 if (isComponent) {
-                    this.setComsMap(ele);
+                    this.setComsMap(ele, containerOrder);
                 }
                 else {
                     if (ele.hasChildNodes()) {
-                        Array.from(ele.children).forEach((node) => this.walk(node));
+                        Array.from(ele.children).forEach((node) => this.walk(node, containerOrder));
                     }
                 }
             }
         }
-        setComsMap(ele) {
+        setComsMap(ele, containerOrder) {
             return __awaiter$1(this, void 0, void 0, function* () {
                 // COM_TYPE: 'COM' 'AREA_IMG' 'IMG' 'TABLE'
                 const comType = this.getComType(ele);
@@ -223,14 +237,19 @@ var htmlToWord = (function (exports) {
                     parentNode: ele.parentNode,
                     parentClass: {},
                 };
-                this.comsMap.set(ele, { selfInfo: domObj });
+                this.comsMap.set(ele, { selfInfo: domObj, order: containerOrder });
                 this.order++;
             });
         }
         sortMap(map) {
-            const sortedArray = [...map].sort((a, b) => a[1].selfInfo.addTop - b[1].selfInfo.addTop);
+            const sortedArray = [...map].sort((a, b) => {
+                if (a[1].order !== b[1].order) {
+                    return a[1].order - b[1].order;
+                }
+                return a[1].selfInfo.addTop - b[1].selfInfo.addTop;
+            });
             const sortedMap = new Map(sortedArray);
-            console.log('sortedMap', sortedMap);
+            console.log('ParseHtml sortedMap', sortedMap);
             return sortedMap;
         }
         /**
@@ -279,6 +298,13 @@ var htmlToWord = (function (exports) {
             }
         }
     }
+    const map = new Map();
+    map.set('a', { order: 2, selfInfo: { addTop: 20 } });
+    map.set('b', { order: 1, selfInfo: { addTop: 10 } });
+    map.set('c', { order: 2, selfInfo: { addTop: 10 } });
+    map.set('d', { order: 1, selfInfo: { addTop: 20 } });
+    map.set('e', { order: 1, selfInfo: { addTop: 20 } });
+    map.set('e', { order: 1, selfInfo: { addTop: 10 } });
 
     var FileSaver_min = {exports: {}};
 
@@ -8968,15 +8994,13 @@ var htmlToWord = (function (exports) {
     };
 
     class WrodFactory {
-        constructor(id) {
+        constructor() {
             this.sections = defaultSections;
-            this.entryId = id;
         }
-        createComsNode() {
+        createComsNode(id) {
             return __awaiter$1(this, void 0, void 0, function* () {
-                const outerEle = document.querySelector(`#${this.entryId}`);
-                const htmlInstance = new ParseHtml(outerEle);
-                const comsMap = htmlInstance.format(outerEle);
+                const htmlInstance = new ParseHtml(id);
+                const comsMap = htmlInstance.format();
                 console.log('this.comsMap', comsMap);
                 const values = comsMap.values();
                 const children = [];
@@ -8997,8 +9021,8 @@ var htmlToWord = (function (exports) {
                 Constant.setConfigClass(config);
             }
             banner();
-            const wordInstance = new WrodFactory(id);
-            const option = yield wordInstance.createComsNode();
+            const wordInstance = new WrodFactory();
+            const option = yield wordInstance.createComsNode(id);
             console.log('exportWrod option', option);
             yield optionToFile({ sections: option, styles: defaultStyle }, filename);
             success && success();
@@ -9145,6 +9169,7 @@ var htmlToWord = (function (exports) {
         yield optionToFile(paragraph1);
     });
 
+    exports.ParseHtml = ParseHtml;
     exports.exportDemo = exportDemo;
     exports.exportWrod = exportWrod;
 
